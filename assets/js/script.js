@@ -37,6 +37,8 @@ var completeEditTask = function(taskName, taskType, taskId) {
 
   formEl.removeAttribute("data-task-id");
   document.querySelector("#save-task").textContent = "Add Task";
+
+  saveTasks();
 };
 
 
@@ -96,6 +98,8 @@ var deleteTask = function(taskId) {
 
   // reassign tasks array to be the same as updatedTaskArray
   tasks = updatedTaskArr;
+
+  saveTasks();
 };
 
 
@@ -162,6 +166,8 @@ var createTaskEl = function(taskDataObj) {
   tasks.push(taskDataObj);
   
   taskIdCounter++;
+
+  saveTasks();
 
   //console.log(taskDataObj);
   //console.log(taskDataObj.status);
@@ -234,6 +240,8 @@ var taskStatusChangeHandler = function(event) {
 
   //console.log(tasks);
 
+  saveTasks();
+
 };
 
 var dragTaskHandler = function(event) {
@@ -284,6 +292,8 @@ var dropTaskHandler = function(event) {
     }
   }
 
+  saveTasks();
+
   console.log(tasks);
 
 };
@@ -294,6 +304,33 @@ if (taskListEl) {
   taskListEl.removeAttribute("style");
 }
 }
+
+var saveTasks = function() {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+  //stringify changed the data into a string so localStorage can understand it
+}
+
+var loadTasks = function () {
+  // get task itesm from localStorage
+  // convert tasks from teh stringified format back into an array of objects
+  // iterate through tasks array and creates task elements on the page from it
+
+  var savedTasks = localStorage.getItem("tasks");
+
+  if (!savedTasks) {
+    return false;   
+  }
+
+  savedTasks = JSON.parse(savedTasks);
+
+  // loop through savedTasks array
+  for (i = 0; i < savedTasks.length; i++) {
+    // pass each task object into the createTaskEl() function
+    createTaskEl(savedTasks[i]);
+
+  }
+}
+
 
 //addEventLister below
 
@@ -310,3 +347,5 @@ pageContentEl.addEventListener("dragover", dropZoneDragHandler);
 pageContentEl.addEventListener("drop", dropTaskHandler);
 
 pageContentEl.addEventListener("dragleave", dragLeaveHandler);
+
+loadTasks();
