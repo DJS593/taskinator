@@ -328,6 +328,8 @@ var loadTasks = function () {
     // pass each task object into the createTaskEl() function
     createTaskEl(savedTasks[i]);
 
+    //console.log(createTaskEl);
+
   }
 }
 
